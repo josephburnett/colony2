@@ -36,7 +36,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	cli := protocol.AsService(conn)
+	cli := protocol.NewHelloServiceClient(conn)
 
 	printMsg := func(s string) {
 		p := dom.Doc.CreateElement("p")
@@ -44,17 +44,26 @@ func main() {
 		dom.Body.AppendChild(p)
 	}
 
-	ctx := context.Background()
+	stream, err := cli.Hello(context.Background())
+	go func() {
+		for {
+			in, err := stream.Recv()
+			if err != nil {
+				panic(err)
+			}
+			printMsg(in.Text)
+		}
+	}()
 	for {
 		name := <-ch
 		printMsg("say hello to: " + name)
 
-		txt, err := cli.Hello(ctx, name)
-		if err != nil {
+		req := &protocol.HelloReq{
+			Name: name,
+		}
+		if err := stream.Send(req); err != nil {
 			panic(err)
 		}
-		printMsg(txt)
 	}
-
 	dom.Loop()
 }

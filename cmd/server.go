@@ -1,8 +1,8 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 
@@ -37,6 +37,20 @@ func main() {
 
 type server struct{}
 
-func (server) Hello(ctx context.Context, name string) (string, error) {
-	return fmt.Sprintf("Hello, %s!", name), nil
+func (server) Hello(stream protocol.HelloService_HelloServer) error {
+	for {
+		in, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		resp := &protocol.HelloResp{
+			Text: fmt.Sprintf("Hello, %s!", in.Name),
+		}
+		if err := stream.Send(resp); err != nil {
+			return err
+		}
+	}
 }

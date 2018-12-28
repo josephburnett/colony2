@@ -18,6 +18,6 @@ message HelloResp {
 }
 
 service HelloService {
-    rpc Hello (HelloReq) returns (HelloResp);
+    rpc Hello (stream HelloReq) returns (stream HelloResp);
 }
 
