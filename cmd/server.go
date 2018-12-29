@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/dennwc/dom/net/ws"
 	"github.com/josephburnett/colony2/pkg/protocol"
@@ -17,7 +18,7 @@ func main() {
 	s := server{}
 
 	srv := grpc.NewServer()
-	protocol.RegisterService(srv, s)
+	protocol.RegisterHelloServiceServer(srv, s)
 
 	const host = "localhost:8080"
 
@@ -38,6 +39,24 @@ func main() {
 type server struct{}
 
 func (server) Hello(stream protocol.HelloService_HelloServer) error {
+	stopCh := make(chan struct{})
+	defer close(stopCh)
+	go func() {
+		tickerCh := time.NewTicker(30 * time.Second).C
+		for {
+			select {
+			case <-stopCh:
+				return
+			case <-tickerCh:
+				resp := &protocol.HelloResp{
+					Text: "Hello?",
+				}
+				if err := stream.Send(resp); err != nil {
+					return
+				}
+			}
+		}
+	}()
 	for {
 		in, err := stream.Recv()
 		if err == io.EOF {
