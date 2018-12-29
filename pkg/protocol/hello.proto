@@ -9,15 +9,57 @@ option (gogoproto.unmarshaler_all) =  true;
 option (gogoproto.goproto_getters_all) = false;
 option go_package = "protocol";
 
+message World {
+  // Colonies by id.
+  map<string, Colony> colonies = 1;
+  // Objects by location
+  map<int32, ObjectColumn> objects = 2;
+  message ObjectColumn {
+    map<int32, Object> rows = 1;
+  }
+  // Surfaces by location
+  map<int32, SurfaceColumn> surfaces = 3;
+  message SurfaceColumn {
+    map<int32, Surface> rows = 1;
+  }
+}
+
+message Colony {
+  string id = 1;
+  string display_name = 2;
+}
+
+message Object {
+  Type type = 1;
+  enum Type {
+    WORKER = 0;
+    QUEEN = 1;
+    FOOD = 2;
+    STONE = 3;
+  }
+}
+
+message Surface {
+  Type type = 1;
+  enum Type {
+    DIRT = 0;
+    SOIL = 1;
+    GRASS = 3;
+    ROCK = 4;
+    HOLE = 5;
+  }
+}
+
+
 message HelloReq {
-    string name = 1;
+  string name = 1;
 }
 
 message HelloResp {
-    string text = 1;
+  string text = 1;
 }
 
 service HelloService {
-    rpc Hello (stream HelloReq) returns (stream HelloResp);
+  rpc Hello (stream HelloReq) returns (stream HelloResp);
 }
 
