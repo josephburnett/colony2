@@ -9,20 +9,6 @@ option (gogoproto.unmarshaler_all) =  true;
 option (gogoproto.goproto_getters_all) = false;
 option go_package = "protocol";
 
-//go:generate protoc --proto_path=$GOPATH/src:. --gogo_out=plugins=grpc:. ./hello.proto
-
-message View {
-
-  // View of a World.
-  World world = 1;
-
-  // Dimensions of View.
-  int32 x_min = 2;
-  int32 x_max = 3;
-  int32 y_min = 4;
-  int32 y_max = 5;
-}
-
 message World {
 
   // Next available id.
@@ -100,16 +86,85 @@ message Surface {
   }
 }
 
+message ColonyReq {
+  oneof req {
 
-message HelloReq {
-  string name = 1;
+    // Subscribe to view updates for a Colony.
+    Subscribe subscribe = 1;
+    
+    // Turn production on/off.
+    Produce produce = 2;
+
+    // Poke a square.
+    Poke poke = 3;
+  }
 }
 
-message HelloResp {
-  string text = 1;
+message Subscribe {
+  
+  // Global Colony id.
+  int32 id = 1;
 }
 
-service HelloService {
-  rpc Hello (stream HelloReq) returns (stream HelloResp);
+message Produce {
+  
+  // Maximum number of ant to produce.
+  int32 max_production_ = 1;
+}
+
+message Poke {
+  
+  // Poke whatever is at a location.
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message ColonyResp {
+  oneof req {
+
+    // Error condition.
+    Error error = 1;
+
+    // State of the world for the connected colony.
+    View view = 2;
+
+    // An update to the current View.
+    ViewUpdate update = 3;
+  }
+
+  // Debug messages
+  repeated string messages = 4;
+}
+
+message Error {
+
+  // Error code.
+  Code code = 1;
+  enum Code {
+    UNDEFINED = 0;
+  }
+
+  // Human readible error message.
+  string msg = 2;
+}
+
+message View {
+
+  // View of a World.
+  World world = 1;
+
+  // Dimensions of View.
+  int32 x_min = 2;
+  int32 x_max = 3;
+  int32 y_min = 4;
+  int32 y_max = 5;
+}
+
+message ViewUpdate {
+  // not sure yet
+}
+
+service ColonyService {
+  rpc Colony (stream ColonyReq) returns (stream ColonyResp);
 }
 

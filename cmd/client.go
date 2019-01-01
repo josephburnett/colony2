@@ -16,18 +16,37 @@ func dialer(s string, dt time.Duration) (net.Conn, error) {
 }
 
 func main() {
+
 	p1 := dom.Doc.CreateElement("p")
 	dom.Body.AppendChild(p1)
+	subscribeBtn := dom.Doc.NewButton("Subscribe.")
+	produceBtn := dom.Doc.NewButton("Produce.")
+	pokeBtn := dom.Doc.NewButton("Poke.")
+	p1.AppendChild(subscribeBtn)
+	p1.AppendChild(produceBtn)
+	p1.AppendChild(pokeBtn)
 
-	inp := dom.Doc.NewInput("text")
-	p1.AppendChild(inp)
-
-	btn := dom.Doc.NewButton("Go!")
-	p1.AppendChild(btn)
-
-	ch := make(chan string, 1)
-	btn.OnClick(func(_ dom.Event) {
-		ch <- inp.Value()
+	ch := make(chan *protocol.ColonyReq, 1)
+	subscribeBtn.OnClick(func(_ dom.Event) {
+		ch <- &protocol.ColonyReq{
+			Req: &protocol.ColonyReq_Subscribe{
+				Subscribe: &protocol.Subscribe{},
+			},
+		}
+	})
+	produceBtn.OnClick(func(_ dom.Event) {
+		ch <- &protocol.ColonyReq{
+			Req: &protocol.ColonyReq_Produce{
+				Produce: &protocol.Produce{},
+			},
+		}
+	})
+	pokeBtn.OnClick(func(_ dom.Event) {
+		ch <- &protocol.ColonyReq{
+			Req: &protocol.ColonyReq_Poke{
+				Poke: &protocol.Poke{},
+			},
+		}
 	})
 
 	conn, err := grpc.Dial("ws://localhost:8080/ws", grpc.WithDialer(dialer), grpc.WithInsecure())
@@ -36,7 +55,7 @@ func main() {
 	}
 	defer conn.Close()
 
-	cli := protocol.NewHelloServiceClient(conn)
+	cli := protocol.NewColonyServiceClient(conn)
 
 	printMsg := func(s string) {
 		p := dom.Doc.CreateElement("p")
@@ -44,23 +63,23 @@ func main() {
 		dom.Body.AppendChild(p)
 	}
 
-	stream, err := cli.Hello(context.Background())
+	stream, err := cli.Colony(context.Background())
 	go func() {
 		for {
 			in, err := stream.Recv()
 			if err != nil {
 				panic(err)
 			}
-			printMsg(in.Text)
+			if in.Messages != nil {
+				for _, msg := range in.Messages {
+					printMsg(msg)
+				}
+			}
+
 		}
 	}()
 	for {
-		name := <-ch
-		printMsg("say hello to: " + name)
-
-		req := &protocol.HelloReq{
-			Name: name,
-		}
+		req := <-ch
 		if err := stream.Send(req); err != nil {
 			panic(err)
 		}

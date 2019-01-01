@@ -1,44 +1,27 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/dennwc/dom/net/ws"
 	"github.com/josephburnett/colony2/pkg/protocol"
+	"github.com/josephburnett/colony2/pkg/server"
 	"google.golang.org/grpc"
 )
 
 //go:generate GOOS=js GOARCH=wasm go build -o app.wasm ./cmd/client.go
 
+var world *server.WorldServer
+
 func main() {
 
-	view := &protocol.View{
-		World: &protocol.World{
-			Objects: map[int32]*protocol.World_ObjectRow{
-				0: &protocol.World_ObjectRow{
-					Columns: map[int32]*protocol.Object{
-						0: &protocol.Object{
-							Type: protocol.Object_WORKER,
-						},
-					},
-				},
-			},
-		},
-		XMin: -10,
-		XMax: 10,
-		YMin: -10,
-		YMax: 10,
-	}
-	fmt.Println(view.Render())
-
-	s := server{}
+	s := webServer{}
+	world = server.NewWorldServer()
 
 	srv := grpc.NewServer()
-	protocol.RegisterHelloServiceServer(srv, s)
+	protocol.RegisterColonyServiceServer(srv, s)
 
 	const host = "localhost:8080"
 
@@ -56,27 +39,9 @@ func main() {
 	}
 }
 
-type server struct{}
+type webServer struct{}
 
-func (server) Hello(stream protocol.HelloService_HelloServer) error {
-	stopCh := make(chan struct{})
-	defer close(stopCh)
-	go func() {
-		tickerCh := time.NewTicker(30 * time.Second).C
-		for {
-			select {
-			case <-stopCh:
-				return
-			case <-tickerCh:
-				resp := &protocol.HelloResp{
-					Text: "Hello?",
-				}
-				if err := stream.Send(resp); err != nil {
-					return
-				}
-			}
-		}
-	}()
+func (webServer) Colony(stream protocol.ColonyService_ColonyServer) error {
 	for {
 		in, err := stream.Recv()
 		if err == io.EOF {
@@ -85,8 +50,12 @@ func (server) Hello(stream protocol.HelloService_HelloServer) error {
 		if err != nil {
 			return err
 		}
-		resp := &protocol.HelloResp{
-			Text: fmt.Sprintf("Hello, %s!", in.Name),
+		resp, err := world.Request(in)
+		if err != nil {
+			return err
+		}
+		if resp == nil {
+			continue
 		}
 		if err := stream.Send(resp); err != nil {
 			return err
