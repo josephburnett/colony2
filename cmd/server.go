@@ -15,6 +15,26 @@ import (
 //go:generate GOOS=js GOARCH=wasm go build -o app.wasm ./cmd/client.go
 
 func main() {
+
+	view := &protocol.View{
+		World: &protocol.World{
+			Objects: map[int32]*protocol.World_ObjectRow{
+				0: &protocol.World_ObjectRow{
+					Columns: map[int32]*protocol.Object{
+						0: &protocol.Object{
+							Type: protocol.Object_WORKER,
+						},
+					},
+				},
+			},
+		},
+		XMin: -10,
+		XMax: 10,
+		YMin: -10,
+		YMax: 10,
+	}
+	fmt.Println(view.Render())
+
 	s := server{}
 
 	srv := grpc.NewServer()

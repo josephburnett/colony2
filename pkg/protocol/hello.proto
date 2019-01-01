@@ -9,28 +9,73 @@ option (gogoproto.unmarshaler_all) =  true;
 option (gogoproto.goproto_getters_all) = false;
 option go_package = "protocol";
 
+//go:generate protoc --proto_path=$GOPATH/src:. --gogo_out=plugins=grpc:. ./hello.proto
+
+message View {
+
+  // View of a World.
+  World world = 1;
+
+  // Dimensions of View.
+  int32 x_min = 2;
+  int32 x_max = 3;
+  int32 y_min = 4;
+  int32 y_max = 5;
+}
+
 message World {
+
+  // Next available id.
+  int32 next_id = 1;
+
   // Colonies by id.
-  map<string, Colony> colonies = 1;
-  // Objects by location
-  map<int32, ObjectColumn> objects = 2;
-  message ObjectColumn {
-    map<int32, Object> rows = 1;
+  map<int32, Colony> colonies = 2;
+
+  // Objects by location.
+  map<int32, ObjectRow> objects = 3;
+  message ObjectRow {
+    map<int32, Object> columns = 1;
   }
-  // Surfaces by location
-  map<int32, SurfaceColumn> surfaces = 3;
-  message SurfaceColumn {
-    map<int32, Surface> rows = 1;
+
+  // Surfaces by location.
+  map<int32, SurfaceRow> surfaces = 4;
+  message SurfaceRow {
+    map<int32, Surface> columns = 1;
   }
 }
 
 message Colony {
-  string id = 1;
+
+  // Global Colony id.
+  int32 id = 1;
+
+  // Name shown in UI.
   string display_name = 2;
+
+  // Phermones by location.
+  map<int32, PhermoneRow> phermones = 3;
+  message PhermoneRow {
+    map<int32, bool> columns = 1;
+  }
+
+  // Colony as a hole or a queen.
+  oneof state {
+    Surface hole = 4;
+    Object queen = 5;
+  }
+
+  // Location of Colony.
+  int32 x = 6;
+  int32 y = 7;
 }
 
 message Object {
-  Type type = 1;
+
+  // Global Object id.
+  int32 id = 1;
+
+  // Object type.
+  Type type = 2;
   enum Type {
     WORKER = 0;
     QUEEN = 1;
@@ -40,7 +85,12 @@ message Object {
 }
 
 message Surface {
-  Type type = 1;
+
+  // Global Surface id.
+  int32 id = 1;
+
+  // Surface type.
+  Type type = 2;
   enum Type {
     DIRT = 0;
     SOIL = 1;

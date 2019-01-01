@@ -26,6 +26,531 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
+type Object_Type int32
+
+const (
+	Object_WORKER Object_Type = 0
+	Object_QUEEN  Object_Type = 1
+	Object_FOOD   Object_Type = 2
+	Object_STONE  Object_Type = 3
+)
+
+var Object_Type_name = map[int32]string{
+	0: "WORKER",
+	1: "QUEEN",
+	2: "FOOD",
+	3: "STONE",
+}
+var Object_Type_value = map[string]int32{
+	"WORKER": 0,
+	"QUEEN":  1,
+	"FOOD":   2,
+	"STONE":  3,
+}
+
+func (x Object_Type) String() string {
+	return proto.EnumName(Object_Type_name, int32(x))
+}
+func (Object_Type) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_hello_664f7dd2cbf5b5d2, []int{3, 0}
+}
+
+type Surface_Type int32
+
+const (
+	Surface_DIRT  Surface_Type = 0
+	Surface_SOIL  Surface_Type = 1
+	Surface_GRASS Surface_Type = 3
+	Surface_ROCK  Surface_Type = 4
+	Surface_HOLE  Surface_Type = 5
+)
+
+var Surface_Type_name = map[int32]string{
+	0: "DIRT",
+	1: "SOIL",
+	3: "GRASS",
+	4: "ROCK",
+	5: "HOLE",
+}
+var Surface_Type_value = map[string]int32{
+	"DIRT":  0,
+	"SOIL":  1,
+	"GRASS": 3,
+	"ROCK":  4,
+	"HOLE":  5,
+}
+
+func (x Surface_Type) String() string {
+	return proto.EnumName(Surface_Type_name, int32(x))
+}
+func (Surface_Type) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_hello_664f7dd2cbf5b5d2, []int{4, 0}
+}
+
+type View struct {
+	// View of a World.
+	World *World `protobuf:"bytes,1,opt,name=world,proto3" json:"world,omitempty"`
+	// Dimensions of View.
+	XMin                 int32    `protobuf:"varint,2,opt,name=x_min,json=xMin,proto3" json:"x_min,omitempty"`
+	XMax                 int32    `protobuf:"varint,3,opt,name=x_max,json=xMax,proto3" json:"x_max,omitempty"`
+	YMin                 int32    `protobuf:"varint,4,opt,name=y_min,json=yMin,proto3" json:"y_min,omitempty"`
+	YMax                 int32    `protobuf:"varint,5,opt,name=y_max,json=yMax,proto3" json:"y_max,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *View) Reset()         { *m = View{} }
+func (m *View) String() string { return proto.CompactTextString(m) }
+func (*View) ProtoMessage()    {}
+func (*View) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hello_664f7dd2cbf5b5d2, []int{0}
+}
+func (m *View) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *View) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_View.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *View) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_View.Merge(dst, src)
+}
+func (m *View) XXX_Size() int {
+	return m.ProtoSize()
+}
+func (m *View) XXX_DiscardUnknown() {
+	xxx_messageInfo_View.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_View proto.InternalMessageInfo
+
+type World struct {
+	// Next available id.
+	NextId int32 `protobuf:"varint,1,opt,name=next_id,json=nextId,proto3" json:"next_id,omitempty"`
+	// Colonies by id.
+	Colonies map[int32]*Colony `protobuf:"bytes,2,rep,name=colonies,proto3" json:"colonies,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	// Objects by location.
+	Objects map[int32]*World_ObjectRow `protobuf:"bytes,3,rep,name=objects,proto3" json:"objects,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	// Surfaces by location.
+	Surfaces             map[int32]*World_SurfaceRow `protobuf:"bytes,4,rep,name=surfaces,proto3" json:"surfaces,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_unrecognized     []byte                      `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
+}
+
+func (m *World) Reset()         { *m = World{} }
+func (m *World) String() string { return proto.CompactTextString(m) }
+func (*World) ProtoMessage()    {}
+func (*World) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hello_664f7dd2cbf5b5d2, []int{1}
+}
+func (m *World) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *World) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_World.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *World) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_World.Merge(dst, src)
+}
+func (m *World) XXX_Size() int {
+	return m.ProtoSize()
+}
+func (m *World) XXX_DiscardUnknown() {
+	xxx_messageInfo_World.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_World proto.InternalMessageInfo
+
+type World_ObjectRow struct {
+	Columns              map[int32]*Object `protobuf:"bytes,1,rep,name=columns,proto3" json:"columns,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
+	XXX_unrecognized     []byte            `json:"-"`
+	XXX_sizecache        int32             `json:"-"`
+}
+
+func (m *World_ObjectRow) Reset()         { *m = World_ObjectRow{} }
+func (m *World_ObjectRow) String() string { return proto.CompactTextString(m) }
+func (*World_ObjectRow) ProtoMessage()    {}
+func (*World_ObjectRow) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hello_664f7dd2cbf5b5d2, []int{1, 2}
+}
+func (m *World_ObjectRow) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *World_ObjectRow) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_World_ObjectRow.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *World_ObjectRow) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_World_ObjectRow.Merge(dst, src)
+}
+func (m *World_ObjectRow) XXX_Size() int {
+	return m.ProtoSize()
+}
+func (m *World_ObjectRow) XXX_DiscardUnknown() {
+	xxx_messageInfo_World_ObjectRow.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_World_ObjectRow proto.InternalMessageInfo
+
+type World_SurfaceRow struct {
+	Columns              map[int32]*Surface `protobuf:"bytes,1,rep,name=columns,proto3" json:"columns,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
+}
+
+func (m *World_SurfaceRow) Reset()         { *m = World_SurfaceRow{} }
+func (m *World_SurfaceRow) String() string { return proto.CompactTextString(m) }
+func (*World_SurfaceRow) ProtoMessage()    {}
+func (*World_SurfaceRow) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hello_664f7dd2cbf5b5d2, []int{1, 4}
+}
+func (m *World_SurfaceRow) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *World_SurfaceRow) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_World_SurfaceRow.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *World_SurfaceRow) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_World_SurfaceRow.Merge(dst, src)
+}
+func (m *World_SurfaceRow) XXX_Size() int {
+	return m.ProtoSize()
+}
+func (m *World_SurfaceRow) XXX_DiscardUnknown() {
+	xxx_messageInfo_World_SurfaceRow.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_World_SurfaceRow proto.InternalMessageInfo
+
+type Colony struct {
+	// Global Colony id.
+	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Name shown in UI.
+	DisplayName string `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"`
+	// Phermones by location.
+	Phermones map[int32]*Colony_PhermoneRow `protobuf:"bytes,3,rep,name=phermones,proto3" json:"phermones,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	// Colony as a hole or a queen.
+	//
+	// Types that are valid to be assigned to State:
+	//	*Colony_Hole
+	//	*Colony_Queen
+	State isColony_State `protobuf_oneof:"state"`
+	// Location of Colony.
+	X                    int32    `protobuf:"varint,6,opt,name=x,proto3" json:"x,omitempty"`
+	Y                    int32    `protobuf:"varint,7,opt,name=y,proto3" json:"y,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Colony) Reset()         { *m = Colony{} }
+func (m *Colony) String() string { return proto.CompactTextString(m) }
+func (*Colony) ProtoMessage()    {}
+func (*Colony) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hello_664f7dd2cbf5b5d2, []int{2}
+}
+func (m *Colony) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Colony) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Colony.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *Colony) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Colony.Merge(dst, src)
+}
+func (m *Colony) XXX_Size() int {
+	return m.ProtoSize()
+}
+func (m *Colony) XXX_DiscardUnknown() {
+	xxx_messageInfo_Colony.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Colony proto.InternalMessageInfo
+
+type isColony_State interface {
+	isColony_State()
+	MarshalTo([]byte) (int, error)
+	ProtoSize() int
+}
+
+type Colony_Hole struct {
+	Hole *Surface `protobuf:"bytes,4,opt,name=hole,proto3,oneof"`
+}
+type Colony_Queen struct {
+	Queen *Object `protobuf:"bytes,5,opt,name=queen,proto3,oneof"`
+}
+
+func (*Colony_Hole) isColony_State()  {}
+func (*Colony_Queen) isColony_State() {}
+
+func (m *Colony) GetState() isColony_State {
+	if m != nil {
+		return m.State
+	}
+	return nil
+}
+
+func (m *Colony) GetHole() *Surface {
+	if x, ok := m.GetState().(*Colony_Hole); ok {
+		return x.Hole
+	}
+	return nil
+}
+
+func (m *Colony) GetQueen() *Object {
+	if x, ok := m.GetState().(*Colony_Queen); ok {
+		return x.Queen
+	}
+	return nil
+}
+
+// XXX_OneofFuncs is for the internal use of the proto package.
+func (*Colony) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
+	return _Colony_OneofMarshaler, _Colony_OneofUnmarshaler, _Colony_OneofSizer, []interface{}{
+		(*Colony_Hole)(nil),
+		(*Colony_Queen)(nil),
+	}
+}
+
+func _Colony_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
+	m := msg.(*Colony)
+	// state
+	switch x := m.State.(type) {
+	case *Colony_Hole:
+		_ = b.EncodeVarint(4<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.Hole); err != nil {
+			return err
+		}
+	case *Colony_Queen:
+		_ = b.EncodeVarint(5<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.Queen); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("Colony.State has unexpected type %T", x)
+	}
+	return nil
+}
+
+func _Colony_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
+	m := msg.(*Colony)
+	switch tag {
+	case 4: // state.hole
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(Surface)
+		err := b.DecodeMessage(msg)
+		m.State = &Colony_Hole{msg}
+		return true, err
+	case 5: // state.queen
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(Object)
+		err := b.DecodeMessage(msg)
+		m.State = &Colony_Queen{msg}
+		return true, err
+	default:
+		return false, nil
+	}
+}
+
+func _Colony_OneofSizer(msg proto.Message) (n int) {
+	m := msg.(*Colony)
+	// state
+	switch x := m.State.(type) {
+	case *Colony_Hole:
+		s := proto.Size(x.Hole)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Colony_Queen:
+		s := proto.Size(x.Queen)
+		n += 1 // tag and wire
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	return n
+}
+
+type Colony_PhermoneRow struct {
+	Columns              map[int32]bool `protobuf:"bytes,1,rep,name=columns,proto3" json:"columns,omitempty" protobuf_key:"varint,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3"`
+	XXX_NoUnkeyedLiteral struct{}       `json:"-"`
+	XXX_unrecognized     []byte         `json:"-"`
+	XXX_sizecache        int32          `json:"-"`
+}
+
+func (m *Colony_PhermoneRow) Reset()         { *m = Colony_PhermoneRow{} }
+func (m *Colony_PhermoneRow) String() string { return proto.CompactTextString(m) }
+func (*Colony_PhermoneRow) ProtoMessage()    {}
+func (*Colony_PhermoneRow) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hello_664f7dd2cbf5b5d2, []int{2, 1}
+}
+func (m *Colony_PhermoneRow) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Colony_PhermoneRow) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Colony_PhermoneRow.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *Colony_PhermoneRow) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Colony_PhermoneRow.Merge(dst, src)
+}
+func (m *Colony_PhermoneRow) XXX_Size() int {
+	return m.ProtoSize()
+}
+func (m *Colony_PhermoneRow) XXX_DiscardUnknown() {
+	xxx_messageInfo_Colony_PhermoneRow.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Colony_PhermoneRow proto.InternalMessageInfo
+
+type Object struct {
+	// Global Object id.
+	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Object type.
+	Type                 Object_Type `protobuf:"varint,2,opt,name=type,proto3,enum=Object_Type" json:"type,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
+}
+
+func (m *Object) Reset()         { *m = Object{} }
+func (m *Object) String() string { return proto.CompactTextString(m) }
+func (*Object) ProtoMessage()    {}
+func (*Object) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hello_664f7dd2cbf5b5d2, []int{3}
+}
+func (m *Object) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Object) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Object.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *Object) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Object.Merge(dst, src)
+}
+func (m *Object) XXX_Size() int {
+	return m.ProtoSize()
+}
+func (m *Object) XXX_DiscardUnknown() {
+	xxx_messageInfo_Object.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Object proto.InternalMessageInfo
+
+type Surface struct {
+	// Global Surface id.
+	Id int32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Surface type.
+	Type                 Surface_Type `protobuf:"varint,2,opt,name=type,proto3,enum=Surface_Type" json:"type,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
+	XXX_unrecognized     []byte       `json:"-"`
+	XXX_sizecache        int32        `json:"-"`
+}
+
+func (m *Surface) Reset()         { *m = Surface{} }
+func (m *Surface) String() string { return proto.CompactTextString(m) }
+func (*Surface) ProtoMessage()    {}
+func (*Surface) Descriptor() ([]byte, []int) {
+	return fileDescriptor_hello_664f7dd2cbf5b5d2, []int{4}
+}
+func (m *Surface) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Surface) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Surface.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (dst *Surface) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Surface.Merge(dst, src)
+}
+func (m *Surface) XXX_Size() int {
+	return m.ProtoSize()
+}
+func (m *Surface) XXX_DiscardUnknown() {
+	xxx_messageInfo_Surface.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Surface proto.InternalMessageInfo
+
 type HelloReq struct {
 	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -37,7 +562,7 @@ func (m *HelloReq) Reset()         { *m = HelloReq{} }
 func (m *HelloReq) String() string { return proto.CompactTextString(m) }
 func (*HelloReq) ProtoMessage()    {}
 func (*HelloReq) Descriptor() ([]byte, []int) {
-	return fileDescriptor_hello_18975f66e19280b9, []int{0}
+	return fileDescriptor_hello_664f7dd2cbf5b5d2, []int{5}
 }
 func (m *HelloReq) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -77,7 +602,7 @@ func (m *HelloResp) Reset()         { *m = HelloResp{} }
 func (m *HelloResp) String() string { return proto.CompactTextString(m) }
 func (*HelloResp) ProtoMessage()    {}
 func (*HelloResp) Descriptor() ([]byte, []int) {
-	return fileDescriptor_hello_18975f66e19280b9, []int{1}
+	return fileDescriptor_hello_664f7dd2cbf5b5d2, []int{6}
 }
 func (m *HelloResp) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -107,8 +632,25 @@ func (m *HelloResp) XXX_DiscardUnknown() {
 var xxx_messageInfo_HelloResp proto.InternalMessageInfo
 
 func init() {
+	proto.RegisterType((*View)(nil), "View")
+	proto.RegisterType((*World)(nil), "World")
+	proto.RegisterMapType((map[int32]*Colony)(nil), "World.ColoniesEntry")
+	proto.RegisterMapType((map[int32]*World_ObjectRow)(nil), "World.ObjectsEntry")
+	proto.RegisterMapType((map[int32]*World_SurfaceRow)(nil), "World.SurfacesEntry")
+	proto.RegisterType((*World_ObjectRow)(nil), "World.ObjectRow")
+	proto.RegisterMapType((map[int32]*Object)(nil), "World.ObjectRow.ColumnsEntry")
+	proto.RegisterType((*World_SurfaceRow)(nil), "World.SurfaceRow")
+	proto.RegisterMapType((map[int32]*Surface)(nil), "World.SurfaceRow.ColumnsEntry")
+	proto.RegisterType((*Colony)(nil), "Colony")
+	proto.RegisterMapType((map[int32]*Colony_PhermoneRow)(nil), "Colony.PhermonesEntry")
+	proto.RegisterType((*Colony_PhermoneRow)(nil), "Colony.PhermoneRow")
+	proto.RegisterMapType((map[int32]bool)(nil), "Colony.PhermoneRow.ColumnsEntry")
+	proto.RegisterType((*Object)(nil), "Object")
+	proto.RegisterType((*Surface)(nil), "Surface")
 	proto.RegisterType((*HelloReq)(nil), "HelloReq")
 	proto.RegisterType((*HelloResp)(nil), "HelloResp")
+	proto.RegisterEnum("Object_Type", Object_Type_name, Object_Type_value)
+	proto.RegisterEnum("Surface_Type", Surface_Type_name, Surface_Type_value)
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -215,6 +757,467 @@ var _HelloService_serviceDesc = grpc.ServiceDesc{
 	Metadata: "hello.proto",
 }
 
+func (m *View) Marshal() (dAtA []byte, err error) {
+	size := m.ProtoSize()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *View) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.World != nil {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.World.ProtoSize()))
+		n1, err := m.World.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n1
+	}
+	if m.XMin != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.XMin))
+	}
+	if m.XMax != 0 {
+		dAtA[i] = 0x18
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.XMax))
+	}
+	if m.YMin != 0 {
+		dAtA[i] = 0x20
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.YMin))
+	}
+	if m.YMax != 0 {
+		dAtA[i] = 0x28
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.YMax))
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *World) Marshal() (dAtA []byte, err error) {
+	size := m.ProtoSize()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *World) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.NextId != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.NextId))
+	}
+	if len(m.Colonies) > 0 {
+		for k, _ := range m.Colonies {
+			dAtA[i] = 0x12
+			i++
+			v := m.Colonies[k]
+			msgSize := 0
+			if v != nil {
+				msgSize = v.ProtoSize()
+				msgSize += 1 + sovHello(uint64(msgSize))
+			}
+			mapSize := 1 + sovHello(uint64(k)) + msgSize
+			i = encodeVarintHello(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0x8
+			i++
+			i = encodeVarintHello(dAtA, i, uint64(k))
+			if v != nil {
+				dAtA[i] = 0x12
+				i++
+				i = encodeVarintHello(dAtA, i, uint64(v.ProtoSize()))
+				n2, err := v.MarshalTo(dAtA[i:])
+				if err != nil {
+					return 0, err
+				}
+				i += n2
+			}
+		}
+	}
+	if len(m.Objects) > 0 {
+		for k, _ := range m.Objects {
+			dAtA[i] = 0x1a
+			i++
+			v := m.Objects[k]
+			msgSize := 0
+			if v != nil {
+				msgSize = v.ProtoSize()
+				msgSize += 1 + sovHello(uint64(msgSize))
+			}
+			mapSize := 1 + sovHello(uint64(k)) + msgSize
+			i = encodeVarintHello(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0x8
+			i++
+			i = encodeVarintHello(dAtA, i, uint64(k))
+			if v != nil {
+				dAtA[i] = 0x12
+				i++
+				i = encodeVarintHello(dAtA, i, uint64(v.ProtoSize()))
+				n3, err := v.MarshalTo(dAtA[i:])
+				if err != nil {
+					return 0, err
+				}
+				i += n3
+			}
+		}
+	}
+	if len(m.Surfaces) > 0 {
+		for k, _ := range m.Surfaces {
+			dAtA[i] = 0x22
+			i++
+			v := m.Surfaces[k]
+			msgSize := 0
+			if v != nil {
+				msgSize = v.ProtoSize()
+				msgSize += 1 + sovHello(uint64(msgSize))
+			}
+			mapSize := 1 + sovHello(uint64(k)) + msgSize
+			i = encodeVarintHello(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0x8
+			i++
+			i = encodeVarintHello(dAtA, i, uint64(k))
+			if v != nil {
+				dAtA[i] = 0x12
+				i++
+				i = encodeVarintHello(dAtA, i, uint64(v.ProtoSize()))
+				n4, err := v.MarshalTo(dAtA[i:])
+				if err != nil {
+					return 0, err
+				}
+				i += n4
+			}
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *World_ObjectRow) Marshal() (dAtA []byte, err error) {
+	size := m.ProtoSize()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *World_ObjectRow) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Columns) > 0 {
+		for k, _ := range m.Columns {
+			dAtA[i] = 0xa
+			i++
+			v := m.Columns[k]
+			msgSize := 0
+			if v != nil {
+				msgSize = v.ProtoSize()
+				msgSize += 1 + sovHello(uint64(msgSize))
+			}
+			mapSize := 1 + sovHello(uint64(k)) + msgSize
+			i = encodeVarintHello(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0x8
+			i++
+			i = encodeVarintHello(dAtA, i, uint64(k))
+			if v != nil {
+				dAtA[i] = 0x12
+				i++
+				i = encodeVarintHello(dAtA, i, uint64(v.ProtoSize()))
+				n5, err := v.MarshalTo(dAtA[i:])
+				if err != nil {
+					return 0, err
+				}
+				i += n5
+			}
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *World_SurfaceRow) Marshal() (dAtA []byte, err error) {
+	size := m.ProtoSize()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *World_SurfaceRow) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Columns) > 0 {
+		for k, _ := range m.Columns {
+			dAtA[i] = 0xa
+			i++
+			v := m.Columns[k]
+			msgSize := 0
+			if v != nil {
+				msgSize = v.ProtoSize()
+				msgSize += 1 + sovHello(uint64(msgSize))
+			}
+			mapSize := 1 + sovHello(uint64(k)) + msgSize
+			i = encodeVarintHello(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0x8
+			i++
+			i = encodeVarintHello(dAtA, i, uint64(k))
+			if v != nil {
+				dAtA[i] = 0x12
+				i++
+				i = encodeVarintHello(dAtA, i, uint64(v.ProtoSize()))
+				n6, err := v.MarshalTo(dAtA[i:])
+				if err != nil {
+					return 0, err
+				}
+				i += n6
+			}
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *Colony) Marshal() (dAtA []byte, err error) {
+	size := m.ProtoSize()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Colony) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Id != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.Id))
+	}
+	if len(m.DisplayName) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(len(m.DisplayName)))
+		i += copy(dAtA[i:], m.DisplayName)
+	}
+	if len(m.Phermones) > 0 {
+		for k, _ := range m.Phermones {
+			dAtA[i] = 0x1a
+			i++
+			v := m.Phermones[k]
+			msgSize := 0
+			if v != nil {
+				msgSize = v.ProtoSize()
+				msgSize += 1 + sovHello(uint64(msgSize))
+			}
+			mapSize := 1 + sovHello(uint64(k)) + msgSize
+			i = encodeVarintHello(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0x8
+			i++
+			i = encodeVarintHello(dAtA, i, uint64(k))
+			if v != nil {
+				dAtA[i] = 0x12
+				i++
+				i = encodeVarintHello(dAtA, i, uint64(v.ProtoSize()))
+				n7, err := v.MarshalTo(dAtA[i:])
+				if err != nil {
+					return 0, err
+				}
+				i += n7
+			}
+		}
+	}
+	if m.State != nil {
+		nn8, err := m.State.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += nn8
+	}
+	if m.X != 0 {
+		dAtA[i] = 0x30
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.X))
+	}
+	if m.Y != 0 {
+		dAtA[i] = 0x38
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.Y))
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *Colony_Hole) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.Hole != nil {
+		dAtA[i] = 0x22
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.Hole.ProtoSize()))
+		n9, err := m.Hole.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n9
+	}
+	return i, nil
+}
+func (m *Colony_Queen) MarshalTo(dAtA []byte) (int, error) {
+	i := 0
+	if m.Queen != nil {
+		dAtA[i] = 0x2a
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.Queen.ProtoSize()))
+		n10, err := m.Queen.MarshalTo(dAtA[i:])
+		if err != nil {
+			return 0, err
+		}
+		i += n10
+	}
+	return i, nil
+}
+func (m *Colony_PhermoneRow) Marshal() (dAtA []byte, err error) {
+	size := m.ProtoSize()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Colony_PhermoneRow) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.Columns) > 0 {
+		for k, _ := range m.Columns {
+			dAtA[i] = 0xa
+			i++
+			v := m.Columns[k]
+			mapSize := 1 + sovHello(uint64(k)) + 1 + 1
+			i = encodeVarintHello(dAtA, i, uint64(mapSize))
+			dAtA[i] = 0x8
+			i++
+			i = encodeVarintHello(dAtA, i, uint64(k))
+			dAtA[i] = 0x10
+			i++
+			if v {
+				dAtA[i] = 1
+			} else {
+				dAtA[i] = 0
+			}
+			i++
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *Object) Marshal() (dAtA []byte, err error) {
+	size := m.ProtoSize()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Object) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Id != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.Id))
+	}
+	if m.Type != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.Type))
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
+func (m *Surface) Marshal() (dAtA []byte, err error) {
+	size := m.ProtoSize()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Surface) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Id != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.Id))
+	}
+	if m.Type != 0 {
+		dAtA[i] = 0x10
+		i++
+		i = encodeVarintHello(dAtA, i, uint64(m.Type))
+	}
+	if m.XXX_unrecognized != nil {
+		i += copy(dAtA[i:], m.XXX_unrecognized)
+	}
+	return i, nil
+}
+
 func (m *HelloReq) Marshal() (dAtA []byte, err error) {
 	size := m.ProtoSize()
 	dAtA = make([]byte, size)
@@ -278,6 +1281,259 @@ func encodeVarintHello(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return offset + 1
 }
+func (m *View) ProtoSize() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.World != nil {
+		l = m.World.ProtoSize()
+		n += 1 + l + sovHello(uint64(l))
+	}
+	if m.XMin != 0 {
+		n += 1 + sovHello(uint64(m.XMin))
+	}
+	if m.XMax != 0 {
+		n += 1 + sovHello(uint64(m.XMax))
+	}
+	if m.YMin != 0 {
+		n += 1 + sovHello(uint64(m.YMin))
+	}
+	if m.YMax != 0 {
+		n += 1 + sovHello(uint64(m.YMax))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *World) ProtoSize() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.NextId != 0 {
+		n += 1 + sovHello(uint64(m.NextId))
+	}
+	if len(m.Colonies) > 0 {
+		for k, v := range m.Colonies {
+			_ = k
+			_ = v
+			l = 0
+			if v != nil {
+				l = v.ProtoSize()
+				l += 1 + sovHello(uint64(l))
+			}
+			mapEntrySize := 1 + sovHello(uint64(k)) + l
+			n += mapEntrySize + 1 + sovHello(uint64(mapEntrySize))
+		}
+	}
+	if len(m.Objects) > 0 {
+		for k, v := range m.Objects {
+			_ = k
+			_ = v
+			l = 0
+			if v != nil {
+				l = v.ProtoSize()
+				l += 1 + sovHello(uint64(l))
+			}
+			mapEntrySize := 1 + sovHello(uint64(k)) + l
+			n += mapEntrySize + 1 + sovHello(uint64(mapEntrySize))
+		}
+	}
+	if len(m.Surfaces) > 0 {
+		for k, v := range m.Surfaces {
+			_ = k
+			_ = v
+			l = 0
+			if v != nil {
+				l = v.ProtoSize()
+				l += 1 + sovHello(uint64(l))
+			}
+			mapEntrySize := 1 + sovHello(uint64(k)) + l
+			n += mapEntrySize + 1 + sovHello(uint64(mapEntrySize))
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *World_ObjectRow) ProtoSize() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Columns) > 0 {
+		for k, v := range m.Columns {
+			_ = k
+			_ = v
+			l = 0
+			if v != nil {
+				l = v.ProtoSize()
+				l += 1 + sovHello(uint64(l))
+			}
+			mapEntrySize := 1 + sovHello(uint64(k)) + l
+			n += mapEntrySize + 1 + sovHello(uint64(mapEntrySize))
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *World_SurfaceRow) ProtoSize() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Columns) > 0 {
+		for k, v := range m.Columns {
+			_ = k
+			_ = v
+			l = 0
+			if v != nil {
+				l = v.ProtoSize()
+				l += 1 + sovHello(uint64(l))
+			}
+			mapEntrySize := 1 + sovHello(uint64(k)) + l
+			n += mapEntrySize + 1 + sovHello(uint64(mapEntrySize))
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *Colony) ProtoSize() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Id != 0 {
+		n += 1 + sovHello(uint64(m.Id))
+	}
+	l = len(m.DisplayName)
+	if l > 0 {
+		n += 1 + l + sovHello(uint64(l))
+	}
+	if len(m.Phermones) > 0 {
+		for k, v := range m.Phermones {
+			_ = k
+			_ = v
+			l = 0
+			if v != nil {
+				l = v.ProtoSize()
+				l += 1 + sovHello(uint64(l))
+			}
+			mapEntrySize := 1 + sovHello(uint64(k)) + l
+			n += mapEntrySize + 1 + sovHello(uint64(mapEntrySize))
+		}
+	}
+	if m.State != nil {
+		n += m.State.ProtoSize()
+	}
+	if m.X != 0 {
+		n += 1 + sovHello(uint64(m.X))
+	}
+	if m.Y != 0 {
+		n += 1 + sovHello(uint64(m.Y))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *Colony_Hole) ProtoSize() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Hole != nil {
+		l = m.Hole.ProtoSize()
+		n += 1 + l + sovHello(uint64(l))
+	}
+	return n
+}
+func (m *Colony_Queen) ProtoSize() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Queen != nil {
+		l = m.Queen.ProtoSize()
+		n += 1 + l + sovHello(uint64(l))
+	}
+	return n
+}
+func (m *Colony_PhermoneRow) ProtoSize() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if len(m.Columns) > 0 {
+		for k, v := range m.Columns {
+			_ = k
+			_ = v
+			mapEntrySize := 1 + sovHello(uint64(k)) + 1 + 1
+			n += mapEntrySize + 1 + sovHello(uint64(mapEntrySize))
+		}
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *Object) ProtoSize() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Id != 0 {
+		n += 1 + sovHello(uint64(m.Id))
+	}
+	if m.Type != 0 {
+		n += 1 + sovHello(uint64(m.Type))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
+func (m *Surface) ProtoSize() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Id != 0 {
+		n += 1 + sovHello(uint64(m.Id))
+	}
+	if m.Type != 0 {
+		n += 1 + sovHello(uint64(m.Type))
+	}
+	if m.XXX_unrecognized != nil {
+		n += len(m.XXX_unrecognized)
+	}
+	return n
+}
+
 func (m *HelloReq) ProtoSize() (n int) {
 	if m == nil {
 		return 0
@@ -322,6 +1578,1538 @@ func sovHello(x uint64) (n int) {
 }
 func sozHello(x uint64) (n int) {
 	return sovHello(uint64((x << 1) ^ uint64((int64(x) >> 63))))
+}
+func (m *View) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowHello
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: View: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: View: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field World", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthHello
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.World == nil {
+				m.World = &World{}
+			}
+			if err := m.World.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field XMin", wireType)
+			}
+			m.XMin = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.XMin |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field XMax", wireType)
+			}
+			m.XMax = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.XMax |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field YMin", wireType)
+			}
+			m.YMin = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.YMin |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 5:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field YMax", wireType)
+			}
+			m.YMax = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.YMax |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipHello(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthHello
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *World) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowHello
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: World: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: World: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field NextId", wireType)
+			}
+			m.NextId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.NextId |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Colonies", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthHello
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Colonies == nil {
+				m.Colonies = make(map[int32]*Colony)
+			}
+			var mapkey int32
+			var mapvalue *Colony
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowHello
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapkey |= (int32(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+				} else if fieldNum == 2 {
+					var mapmsglen int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapmsglen |= (int(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					if mapmsglen < 0 {
+						return ErrInvalidLengthHello
+					}
+					postmsgIndex := iNdEx + mapmsglen
+					if mapmsglen < 0 {
+						return ErrInvalidLengthHello
+					}
+					if postmsgIndex > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = &Colony{}
+					if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+						return err
+					}
+					iNdEx = postmsgIndex
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipHello(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if skippy < 0 {
+						return ErrInvalidLengthHello
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
+			}
+			m.Colonies[mapkey] = mapvalue
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Objects", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthHello
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Objects == nil {
+				m.Objects = make(map[int32]*World_ObjectRow)
+			}
+			var mapkey int32
+			var mapvalue *World_ObjectRow
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowHello
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapkey |= (int32(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+				} else if fieldNum == 2 {
+					var mapmsglen int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapmsglen |= (int(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					if mapmsglen < 0 {
+						return ErrInvalidLengthHello
+					}
+					postmsgIndex := iNdEx + mapmsglen
+					if mapmsglen < 0 {
+						return ErrInvalidLengthHello
+					}
+					if postmsgIndex > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = &World_ObjectRow{}
+					if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+						return err
+					}
+					iNdEx = postmsgIndex
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipHello(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if skippy < 0 {
+						return ErrInvalidLengthHello
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
+			}
+			m.Objects[mapkey] = mapvalue
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Surfaces", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthHello
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Surfaces == nil {
+				m.Surfaces = make(map[int32]*World_SurfaceRow)
+			}
+			var mapkey int32
+			var mapvalue *World_SurfaceRow
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowHello
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapkey |= (int32(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+				} else if fieldNum == 2 {
+					var mapmsglen int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapmsglen |= (int(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					if mapmsglen < 0 {
+						return ErrInvalidLengthHello
+					}
+					postmsgIndex := iNdEx + mapmsglen
+					if mapmsglen < 0 {
+						return ErrInvalidLengthHello
+					}
+					if postmsgIndex > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = &World_SurfaceRow{}
+					if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+						return err
+					}
+					iNdEx = postmsgIndex
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipHello(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if skippy < 0 {
+						return ErrInvalidLengthHello
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
+			}
+			m.Surfaces[mapkey] = mapvalue
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipHello(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthHello
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *World_ObjectRow) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowHello
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ObjectRow: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ObjectRow: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Columns", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthHello
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Columns == nil {
+				m.Columns = make(map[int32]*Object)
+			}
+			var mapkey int32
+			var mapvalue *Object
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowHello
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapkey |= (int32(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+				} else if fieldNum == 2 {
+					var mapmsglen int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapmsglen |= (int(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					if mapmsglen < 0 {
+						return ErrInvalidLengthHello
+					}
+					postmsgIndex := iNdEx + mapmsglen
+					if mapmsglen < 0 {
+						return ErrInvalidLengthHello
+					}
+					if postmsgIndex > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = &Object{}
+					if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+						return err
+					}
+					iNdEx = postmsgIndex
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipHello(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if skippy < 0 {
+						return ErrInvalidLengthHello
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
+			}
+			m.Columns[mapkey] = mapvalue
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipHello(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthHello
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *World_SurfaceRow) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowHello
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: SurfaceRow: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: SurfaceRow: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Columns", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthHello
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Columns == nil {
+				m.Columns = make(map[int32]*Surface)
+			}
+			var mapkey int32
+			var mapvalue *Surface
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowHello
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapkey |= (int32(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+				} else if fieldNum == 2 {
+					var mapmsglen int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapmsglen |= (int(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					if mapmsglen < 0 {
+						return ErrInvalidLengthHello
+					}
+					postmsgIndex := iNdEx + mapmsglen
+					if mapmsglen < 0 {
+						return ErrInvalidLengthHello
+					}
+					if postmsgIndex > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = &Surface{}
+					if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+						return err
+					}
+					iNdEx = postmsgIndex
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipHello(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if skippy < 0 {
+						return ErrInvalidLengthHello
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
+			}
+			m.Columns[mapkey] = mapvalue
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipHello(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthHello
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Colony) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowHello
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Colony: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Colony: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DisplayName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= (uint64(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthHello
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.DisplayName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Phermones", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthHello
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Phermones == nil {
+				m.Phermones = make(map[int32]*Colony_PhermoneRow)
+			}
+			var mapkey int32
+			var mapvalue *Colony_PhermoneRow
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowHello
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapkey |= (int32(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+				} else if fieldNum == 2 {
+					var mapmsglen int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapmsglen |= (int(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					if mapmsglen < 0 {
+						return ErrInvalidLengthHello
+					}
+					postmsgIndex := iNdEx + mapmsglen
+					if mapmsglen < 0 {
+						return ErrInvalidLengthHello
+					}
+					if postmsgIndex > l {
+						return io.ErrUnexpectedEOF
+					}
+					mapvalue = &Colony_PhermoneRow{}
+					if err := mapvalue.Unmarshal(dAtA[iNdEx:postmsgIndex]); err != nil {
+						return err
+					}
+					iNdEx = postmsgIndex
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipHello(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if skippy < 0 {
+						return ErrInvalidLengthHello
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
+			}
+			m.Phermones[mapkey] = mapvalue
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Hole", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthHello
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &Surface{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.State = &Colony_Hole{v}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Queen", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthHello
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			v := &Object{}
+			if err := v.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			m.State = &Colony_Queen{v}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field X", wireType)
+			}
+			m.X = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.X |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 7:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Y", wireType)
+			}
+			m.Y = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Y |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipHello(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthHello
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Colony_PhermoneRow) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowHello
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PhermoneRow: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PhermoneRow: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Columns", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= (int(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthHello
+			}
+			postIndex := iNdEx + msglen
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Columns == nil {
+				m.Columns = make(map[int32]bool)
+			}
+			var mapkey int32
+			var mapvalue bool
+			for iNdEx < postIndex {
+				entryPreIndex := iNdEx
+				var wire uint64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowHello
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					wire |= (uint64(b) & 0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				fieldNum := int32(wire >> 3)
+				if fieldNum == 1 {
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapkey |= (int32(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+				} else if fieldNum == 2 {
+					var mapvaluetemp int
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowHello
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						mapvaluetemp |= (int(b) & 0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					mapvalue = bool(mapvaluetemp != 0)
+				} else {
+					iNdEx = entryPreIndex
+					skippy, err := skipHello(dAtA[iNdEx:])
+					if err != nil {
+						return err
+					}
+					if skippy < 0 {
+						return ErrInvalidLengthHello
+					}
+					if (iNdEx + skippy) > postIndex {
+						return io.ErrUnexpectedEOF
+					}
+					iNdEx += skippy
+				}
+			}
+			m.Columns[mapkey] = mapvalue
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipHello(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthHello
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Object) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowHello
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Object: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Object: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			m.Type = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Type |= (Object_Type(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipHello(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthHello
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Surface) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowHello
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Surface: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Surface: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= (int32(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Type", wireType)
+			}
+			m.Type = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowHello
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Type |= (Surface_Type(b) & 0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		default:
+			iNdEx = preIndex
+			skippy, err := skipHello(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthHello
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.XXX_unrecognized = append(m.XXX_unrecognized, dAtA[iNdEx:iNdEx+skippy]...)
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
 }
 func (m *HelloReq) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
@@ -588,20 +3376,57 @@ var (
 	ErrIntOverflowHello   = fmt.Errorf("proto: integer overflow")
 )
 
-func init() { proto.RegisterFile("hello.proto", fileDescriptor_hello_18975f66e19280b9) }
+func init() { proto.RegisterFile("hello.proto", fileDescriptor_hello_664f7dd2cbf5b5d2) }
 
-var fileDescriptor_hello_18975f66e19280b9 = []byte{
-	// 180 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xce, 0x48, 0xcd, 0xc9,
-	0xc9, 0xd7, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x97, 0xd2, 0x4d, 0xcf, 0x2c, 0xc9, 0x28, 0x4d, 0xd2,
-	0x4b, 0xce, 0xcf, 0xd5, 0x4f, 0xcf, 0x4f, 0xcf, 0xd7, 0x07, 0x0b, 0x27, 0x95, 0xa6, 0x81, 0x79,
-	0x60, 0x0e, 0x98, 0x05, 0x51, 0xae, 0x24, 0xc7, 0xc5, 0xe1, 0x01, 0xd2, 0x1d, 0x94, 0x5a, 0x28,
-	0x24, 0xc4, 0xc5, 0x92, 0x97, 0x98, 0x9b, 0x2a, 0xc1, 0xa8, 0xc0, 0xa8, 0xc1, 0x19, 0x04, 0x66,
-	0x2b, 0xc9, 0x73, 0x71, 0x42, 0xe5, 0x8b, 0x0b, 0x40, 0x0a, 0x4a, 0x52, 0x2b, 0x4a, 0x60, 0x0a,
-	0x40, 0x6c, 0x23, 0x23, 0x2e, 0x1e, 0xb0, 0x82, 0xe0, 0xd4, 0xa2, 0xb2, 0xcc, 0xe4, 0x54, 0x21,
-	0x25, 0x2e, 0x56, 0x30, 0x5f, 0x88, 0x53, 0x0f, 0x66, 0xb0, 0x14, 0x97, 0x1e, 0xdc, 0x0c, 0x0d,
-	0x46, 0x03, 0x46, 0x27, 0xb9, 0x13, 0x0f, 0xe5, 0x18, 0x4e, 0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48,
-	0x8e, 0xf1, 0xc1, 0x23, 0x39, 0x86, 0x05, 0x8f, 0xe5, 0x18, 0xa3, 0x38, 0xc0, 0x2e, 0x4a, 0xce,
-	0xcf, 0x49, 0x62, 0x03, 0xb3, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0xa0, 0x67, 0x06, 0x2d,
-	0xd9, 0x00, 0x00, 0x00,
+var fileDescriptor_hello_664f7dd2cbf5b5d2 = []byte{
+	// 772 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x55, 0xcd, 0x6e, 0xe3, 0x54,
+	0x14, 0xce, 0x4d, 0xec, 0xfc, 0x9c, 0xa4, 0x95, 0xb9, 0x1d, 0x81, 0x15, 0x31, 0x9e, 0xe0, 0x05,
+	0x84, 0xc5, 0x78, 0x46, 0x01, 0x89, 0xa1, 0x3b, 0xa6, 0x09, 0xa4, 0x6a, 0x89, 0xe9, 0x4d, 0xa1,
+	0x12, 0x9b, 0xca, 0x49, 0x6e, 0x1b, 0x83, 0x63, 0xa7, 0xb1, 0xd3, 0xd8, 0x0f, 0xc0, 0x02, 0x89,
+	0x87, 0xe0, 0x19, 0xfa, 0x14, 0x5d, 0xf2, 0x08, 0x50, 0x5e, 0x04, 0xdd, 0x1f, 0x27, 0x76, 0x9a,
+	0xaa, 0xec, 0xce, 0xf9, 0xce, 0x77, 0xcf, 0xf9, 0xce, 0x8f, 0x65, 0xa8, 0x4f, 0xa9, 0xe7, 0x05,
+	0xd6, 0x7c, 0x11, 0x44, 0x41, 0xf3, 0xf5, 0xb5, 0x1b, 0x4d, 0x97, 0x23, 0x6b, 0x1c, 0xcc, 0xde,
+	0x5c, 0x07, 0xd7, 0xc1, 0x1b, 0x0e, 0x8f, 0x96, 0x57, 0xdc, 0xe3, 0x0e, 0xb7, 0x04, 0xdd, 0x8c,
+	0x41, 0xf9, 0xc9, 0xa5, 0x2b, 0xfc, 0x31, 0xa8, 0xab, 0x60, 0xe1, 0x4d, 0x74, 0xd4, 0x42, 0xed,
+	0x7a, 0xa7, 0x6c, 0x5d, 0x30, 0x8f, 0x08, 0x10, 0x1f, 0x80, 0x1a, 0x5f, 0xce, 0x5c, 0x5f, 0x2f,
+	0xb6, 0x50, 0x5b, 0x25, 0x4a, 0xfc, 0xbd, 0xeb, 0x4b, 0xd0, 0x89, 0xf5, 0x52, 0x0a, 0x3a, 0x31,
+	0x03, 0x13, 0xce, 0x54, 0x04, 0x98, 0x48, 0x66, 0xc2, 0x99, 0x6a, 0x0a, 0x3a, 0xb1, 0x79, 0xa7,
+	0x82, 0xca, 0x8b, 0xe0, 0x8f, 0xa0, 0xe2, 0xd3, 0x38, 0xba, 0x74, 0x45, 0x75, 0x95, 0x94, 0x99,
+	0x7b, 0x3c, 0xc1, 0x6f, 0xa1, 0x3a, 0x0e, 0xbc, 0xc0, 0x77, 0x69, 0xa8, 0x17, 0x5b, 0xa5, 0x76,
+	0xbd, 0xf3, 0x42, 0xe8, 0xb2, 0x8e, 0x24, 0xdc, 0xf3, 0xa3, 0x45, 0x42, 0xd6, 0x2c, 0xfc, 0x1a,
+	0x2a, 0xc1, 0xe8, 0x17, 0x3a, 0x8e, 0x42, 0xbd, 0xc4, 0x1f, 0x1c, 0xc8, 0x07, 0xb6, 0x40, 0x05,
+	0x3f, 0xe5, 0xb0, 0x02, 0xe1, 0x72, 0x71, 0xe5, 0x8c, 0x69, 0xa8, 0x2b, 0xb9, 0x02, 0x43, 0x09,
+	0xcb, 0x02, 0x29, 0xab, 0xd9, 0x85, 0xbd, 0x5c, 0x6d, 0xac, 0x41, 0xe9, 0x57, 0x9a, 0x48, 0xe1,
+	0xcc, 0xc4, 0x2f, 0x41, 0xbd, 0x75, 0xbc, 0x25, 0xe5, 0xc3, 0xaa, 0x77, 0x2a, 0x42, 0x6c, 0x42,
+	0x04, 0x7a, 0x58, 0x7c, 0x87, 0x9a, 0xa7, 0xd0, 0xc8, 0x0a, 0xda, 0x91, 0xe4, 0xd3, 0x7c, 0x12,
+	0x2d, 0xd7, 0x06, 0x09, 0x56, 0xd9, 0x6c, 0xbf, 0x23, 0xa8, 0xad, 0x03, 0xf8, 0x2b, 0xa8, 0x8c,
+	0x03, 0x6f, 0x39, 0xf3, 0x43, 0x1d, 0xf1, 0x96, 0x5e, 0x6e, 0xbf, 0x65, 0x82, 0x58, 0x5c, 0x0e,
+	0x43, 0xb2, 0x9b, 0x47, 0xd0, 0xc8, 0x06, 0xfe, 0x4f, 0x67, 0x32, 0x65, 0x46, 0xcb, 0x00, 0xf6,
+	0x72, 0xa3, 0xdb, 0x91, 0xe5, 0xb3, 0x7c, 0x96, 0x0f, 0xf2, 0x13, 0xdf, 0xea, 0xed, 0x0f, 0x04,
+	0xb0, 0x89, 0xe0, 0x77, 0xdb, 0xcd, 0x19, 0x8f, 0x5e, 0x3f, 0xd1, 0x5d, 0xf7, 0xd9, 0xee, 0x8c,
+	0xbc, 0xae, 0xea, 0x3a, 0xe7, 0x46, 0x8e, 0x79, 0x57, 0x82, 0xb2, 0x58, 0x27, 0xde, 0x87, 0xe2,
+	0xfa, 0x60, 0x8b, 0xee, 0x04, 0x7f, 0x02, 0x8d, 0x89, 0x1b, 0xce, 0x3d, 0x27, 0xb9, 0xf4, 0x9d,
+	0x99, 0xc8, 0x52, 0x23, 0x75, 0x89, 0x0d, 0x9c, 0x19, 0xc5, 0x5f, 0x42, 0x6d, 0x3e, 0xa5, 0x8b,
+	0x59, 0xe0, 0xd3, 0xf4, 0x3e, 0x3f, 0x94, 0xd7, 0x61, 0xfd, 0x90, 0x06, 0x84, 0xee, 0x0d, 0x11,
+	0x1b, 0xa0, 0x4c, 0x03, 0x8f, 0xf2, 0x2f, 0x2a, 0x23, 0xab, 0x5f, 0x20, 0x1c, 0xc7, 0xaf, 0x40,
+	0xbd, 0x59, 0x52, 0xea, 0xf3, 0xaf, 0x6b, 0xb3, 0x95, 0x7e, 0x81, 0x08, 0x1c, 0x37, 0x00, 0xc5,
+	0x7a, 0x99, 0x0b, 0x45, 0x31, 0xf3, 0x12, 0xbd, 0x22, 0xbc, 0xa4, 0x79, 0x06, 0xfb, 0xf9, 0xca,
+	0x3b, 0x06, 0xf3, 0x79, 0x7e, 0x30, 0x07, 0xdb, 0x92, 0xb7, 0x56, 0xf6, 0x1b, 0x82, 0x7a, 0x26,
+	0x84, 0x0f, 0xb7, 0x77, 0xd6, 0xda, 0x91, 0xe0, 0x89, 0xad, 0x1d, 0x3e, 0xbb, 0xb5, 0x17, 0x59,
+	0x71, 0xd5, 0x8c, 0x8e, 0xf7, 0x15, 0x50, 0xc3, 0xc8, 0x89, 0xa8, 0xe9, 0x43, 0x59, 0x8c, 0xe4,
+	0xd1, 0xce, 0x5a, 0xa0, 0x44, 0xc9, 0x5c, 0xbc, 0xdd, 0xef, 0x34, 0xe4, 0xe4, 0xac, 0xf3, 0x64,
+	0x4e, 0x09, 0x8f, 0x98, 0x1d, 0x50, 0x98, 0x87, 0x01, 0xca, 0x17, 0x36, 0x39, 0xe9, 0x11, 0xad,
+	0x80, 0x6b, 0xa0, 0x9e, 0xfd, 0xd8, 0xeb, 0x0d, 0x34, 0x84, 0xab, 0xa0, 0x7c, 0x6b, 0xdb, 0x5d,
+	0xad, 0xc8, 0xc0, 0xe1, 0xb9, 0x3d, 0xe8, 0x69, 0x25, 0x73, 0x05, 0x15, 0xb9, 0xa3, 0x1d, 0x47,
+	0x92, 0x2d, 0xb8, 0x97, 0xee, 0x32, 0x5b, 0xf1, 0x6b, 0x59, 0xb1, 0x0a, 0x4a, 0xf7, 0x98, 0x9c,
+	0x6b, 0x05, 0x66, 0x0d, 0xed, 0xe3, 0x53, 0x0d, 0xb1, 0x22, 0xdf, 0x91, 0x6f, 0x86, 0x43, 0xad,
+	0xc4, 0x40, 0x62, 0x1f, 0x9d, 0x68, 0x0a, 0xb3, 0xfa, 0xf6, 0x69, 0x4f, 0x53, 0x4d, 0x03, 0xaa,
+	0x7d, 0xf6, 0x2b, 0x20, 0xf4, 0x06, 0x63, 0x50, 0xf8, 0x19, 0x22, 0x7e, 0x86, 0xdc, 0x36, 0x5f,
+	0x41, 0x4d, 0xc6, 0xc3, 0x39, 0x23, 0x44, 0x34, 0x8e, 0x52, 0x02, 0xb3, 0x3b, 0x1d, 0x68, 0x70,
+	0xc2, 0x90, 0x2e, 0x6e, 0xdd, 0x31, 0xc5, 0x26, 0xa8, 0xdc, 0xc7, 0x35, 0x2b, 0x4d, 0xdc, 0x04,
+	0x6b, 0x9d, 0xa3, 0x8d, 0xde, 0xa2, 0xf7, 0xc6, 0xfd, 0x3f, 0x46, 0xe1, 0xfe, 0xc1, 0x40, 0x7f,
+	0x3d, 0x18, 0xe8, 0xef, 0x07, 0xa3, 0xf0, 0xe7, 0xbf, 0x06, 0xfa, 0xb9, 0xca, 0x7f, 0x2f, 0xe3,
+	0xc0, 0x1b, 0x95, 0xb9, 0xf5, 0xc5, 0x7f, 0x01, 0x00, 0x00, 0xff, 0xff, 0x42, 0x02, 0xeb, 0xa1,
+	0xa6, 0x06, 0x00, 0x00,
 }
