@@ -3,7 +3,6 @@ package server
 import (
 	"io"
 
-	"github.com/josephburnett/colony2/pkg/client"
 	"github.com/josephburnett/colony2/pkg/protocol"
 	"github.com/josephburnett/colony2/pkg/world"
 )
@@ -18,8 +17,9 @@ type Server struct {
 
 func (s Server) Colony(stream protocol.ColonyService_ColonyServer) error {
 
-	// New Client to represent this unique connection.
-	c := client.NewClient(stream)
+	// Register this connection as a unique client.
+	id := s.World.Register(stream)
+	defer s.World.Unregister(id)
 
 	for {
 		req, err := stream.Recv()
@@ -30,7 +30,7 @@ func (s Server) Colony(stream protocol.ColonyService_ColonyServer) error {
 			return err
 		}
 		if subscribe := req.GetSubscribe(); subscribe != nil {
-			err := s.World.Subscribe(c, subscribe)
+			err := s.World.Subscribe(id, subscribe)
 			if err != nil {
 				c.Error(err)
 				return nil
@@ -38,7 +38,7 @@ func (s Server) Colony(stream protocol.ColonyService_ColonyServer) error {
 			return nil
 		}
 		if produce := req.GetProduce(); produce != nil {
-			err := s.World.Produce(c, produce)
+			err := s.World.Produce(id, produce)
 			if err != nil {
 				c.Error(err)
 				return nil
@@ -46,7 +46,7 @@ func (s Server) Colony(stream protocol.ColonyService_ColonyServer) error {
 			return nil
 		}
 		if poke := req.GetPoke(); poke != nil {
-			err := s.World.Poke(c, poke)
+			err := s.World.Poke(id, poke)
 			if err != nil {
 				c.Error(err)
 				return nil
