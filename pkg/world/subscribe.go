@@ -2,12 +2,13 @@ package world
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/josephburnett/colony2/pkg/protocol"
 )
 
 func (w *RunningWorld) Subscribe(id ClientId, req *protocol.Subscribe) error {
-	log.Debugf("subscribing client %v to colony %v", id, req.Id)
+	log.Printf("subscribing client %v to colony %v", id, req.Id)
 
 	// Get the client.
 	w.clientMux.Lock()
@@ -21,7 +22,7 @@ func (w *RunningWorld) Subscribe(id ClientId, req *protocol.Subscribe) error {
 	colonyId := ColonyId(req.Id)
 	w.worldMux.RLock()
 	defer w.worldMux.RUnlock()
-	if _, ok := w.Colonies[colonyId]; !ok {
+	if _, ok := w.world.Colonies[int32(colonyId)]; !ok {
 		client.Error(fmt.Errorf("unknown colony %v", colonyId))
 		return nil
 	}
@@ -30,7 +31,7 @@ func (w *RunningWorld) Subscribe(id ClientId, req *protocol.Subscribe) error {
 	subscriptions, ok := w.clientSubscriptions[id]
 	if !ok {
 		subscriptions = make(map[ColonyId]bool)
-		w.clientSubscriptions = subscriptions
+		w.clientSubscriptions[id] = subscriptions
 	}
 	subscriptions[colonyId] = true
 
@@ -38,9 +39,10 @@ func (w *RunningWorld) Subscribe(id ClientId, req *protocol.Subscribe) error {
 	subscribers, ok := w.clientSubscribers[colonyId]
 	if !ok {
 		subscribers = make(map[ClientId]bool)
-		w.clientSubscribers = subscribers
+		w.clientSubscribers[colonyId] = subscribers
 	}
 	subscribers[id] = true
 
-	log.Debugf("subscribed client %v to colony %v", id, req.Id)
+	log.Printf("subscribed client %v to colony %v", id, req.Id)
+	return nil
 }

@@ -1,6 +1,9 @@
 package world
 
 import (
+	"log"
+	"sync/atomic"
+
 	"github.com/josephburnett/colony2/pkg/protocol"
 )
 
@@ -8,24 +11,24 @@ var nextClientId int32 = 0
 
 // Register submits a connected client and gets a unique client id.
 func (w *RunningWorld) Register(stream protocol.ColonyService_ColonyServer) ClientId {
-	log.Debugf("registering stream %v", stream)
+	log.Printf("registering stream %v", stream)
 	w.clientMux.Lock()
 	defer w.clientMux.Unlock()
-	id := atomicAddInt32(&nextClientId, 1)
+	id := ClientId(atomic.AddInt32(&nextClientId, 1))
 	w.clients[id] = &client{
 		id:     id,
 		stream: stream,
 	}
-	log.Debugf("registered stream %v as client %v", stream, id)
+	log.Printf("registered stream %v as client %v", stream, id)
 	return id
 }
 
 // Unregister deletes a connected client by id and its subscriptions.
 func (w *RunningWorld) Unregister(id ClientId) {
-	log.Debugf("unregistering client %v", id)
+	log.Printf("unregistering client %v", id)
 	w.clientMux.Lock()
-	defer w.clientsMux.Unlock()
-	if colonies, ok := w.clientSubscriptions; ok {
+	defer w.clientMux.Unlock()
+	if colonies, ok := w.clientSubscriptions[id]; ok {
 		for c := range colonies {
 			if ids, ok := w.clientSubscribers[c]; ok {
 				delete(ids, id)
@@ -34,7 +37,7 @@ func (w *RunningWorld) Unregister(id ClientId) {
 		}
 		delete(w.clientSubscriptions, id)
 	}
-	if c, ok := w.clients[id]; ok {
+	if _, ok := w.clients[id]; ok {
 		delete(w.clients, id)
 	}
 	log.Printf("unregistered client %v", id)
@@ -46,9 +49,9 @@ type client struct {
 }
 
 func (c *client) View(v *protocol.View, msg ...string) error {
-	log.Debugf("sending colony %v view to client %v", "?", c.id)
+	log.Printf("sending colony %v view to client %v", "?", c.id)
 	resp := &protocol.ColonyResp{
-		Res: &protocol.ColonyResp_View{
+		Req: &protocol.ColonyResp_View{
 			View: v,
 		},
 	}
@@ -58,9 +61,10 @@ func (c *client) View(v *protocol.View, msg ...string) error {
 	return c.stream.Send(resp)
 }
 
-func (c *client) Update(u *protocol.Update, msg ...string) error {
+func (c *client) Update(u *protocol.ViewUpdate, msg ...string) error {
+	log.Printf("sending colony %v update to client %v", "?", c.id)
 	resp := &protocol.ColonyResp{
-		Res: &protocol.ColonyResp_Update{
+		Req: &protocol.ColonyResp_Update{
 			Update: u,
 		},
 	}
@@ -70,7 +74,8 @@ func (c *client) Update(u *protocol.Update, msg ...string) error {
 	return c.stream.Send(resp)
 }
 
-func (c *client) Error(err error, msg ...string) {
+func (c *client) Error(err error, msg ...string) error {
+	log.Printf("sending error %q to client %v", err.Error(), c.id)
 	resp := &protocol.ColonyResp{
 		Messages: []string{err.Error()},
 	}
@@ -80,7 +85,8 @@ func (c *client) Error(err error, msg ...string) {
 	return c.stream.Send(resp)
 }
 
-func (c *client) Msg(m string, msg ...string) {
+func (c *client) Msg(m string, msg ...string) error {
+	log.Printf("sending messages %q ... to client %v", m, c.id)
 	msg = append(msg, m)
 	resp := &protocol.ColonyResp{
 		Messages: msg,

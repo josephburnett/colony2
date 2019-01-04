@@ -30,7 +30,11 @@ type RunningWorld struct {
 // NewRunningWorld starts a new, empty RunningWorld.
 func NewRunningWorld() *RunningWorld {
 	w := &RunningWorld{
-		world: &protocol.World{},
+		world:               &protocol.World{},
+		views:               make(map[ColonyId]*view),
+		clients:             make(map[ClientId]*client),
+		clientSubscriptions: make(map[ClientId]map[ColonyId]bool),
+		clientSubscribers:   make(map[ColonyId]map[ClientId]bool),
 	}
 	return w
 }

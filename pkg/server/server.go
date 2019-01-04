@@ -30,28 +30,19 @@ func (s Server) Colony(stream protocol.ColonyService_ColonyServer) error {
 			return err
 		}
 		if subscribe := req.GetSubscribe(); subscribe != nil {
-			err := s.World.Subscribe(id, subscribe)
-			if err != nil {
-				c.Error(err)
-				return nil
+			if err := s.World.Subscribe(id, subscribe); err != nil {
+				return err
 			}
-			return nil
 		}
 		if produce := req.GetProduce(); produce != nil {
-			err := s.World.Produce(id, produce)
-			if err != nil {
-				c.Error(err)
-				return nil
+			if err := s.World.Produce(id, produce); err != nil {
+				return err
 			}
-			return nil
 		}
 		if poke := req.GetPoke(); poke != nil {
-			err := s.World.Poke(id, poke)
-			if err != nil {
-				c.Error(err)
-				return nil
+			if err := s.World.Poke(id, poke); err != nil {
+				return err
 			}
-			return nil
 		}
 	}
 }

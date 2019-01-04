@@ -10,6 +10,6 @@ func (w *RunningWorld) Poke(id ClientId, req *protocol.Poke) error {
 	if c, ok := w.clients[id]; ok {
 		// TODO: poke an ant at the location if owned by subscribed colony.
 		c.Msg("Poke!")
-		return nil
 	}
+	return nil
 }
