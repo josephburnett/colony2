@@ -81,8 +81,9 @@ message Surface {
     DIRT = 0;
     SOIL = 1;
     GRASS = 3;
-    ROCK = 4;
-    HOLE = 5;
+    WATER = 4;
+    ROCK = 5;
+    HOLE = 6;
   }
 }
 

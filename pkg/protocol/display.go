@@ -34,31 +34,31 @@ func (w *World) Render(xMin, xMax, yMin, yMax int32) string {
 func (o *Object) Render() string {
 	switch o.Type {
 	case Object_FOOD:
-		return "@"
+		return " @"
 	case Object_QUEEN:
-		return "Q"
+		return " Q"
 	case Object_STONE:
-		return "o"
+		return " o"
 	case Object_WORKER:
-		return "A"
+		return " A"
 	default:
-		return "?"
+		return " ?"
 	}
 }
 
 func (s *Surface) Render() string {
 	switch s.Type {
 	case Surface_DIRT:
-		return "_"
+		return " _"
 	case Surface_GRASS:
-		return "i"
+		return " i"
 	case Surface_HOLE:
-		return "*"
+		return " *"
 	case Surface_ROCK:
-		return "#"
+		return " #"
 	case Surface_SOIL:
-		return "="
+		return " ="
 	default:
-		return "?"
+		return " ?"
 	}
 }
