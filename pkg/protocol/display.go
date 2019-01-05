@@ -49,15 +49,17 @@ func (o *Object) Render() string {
 func (s *Surface) Render() string {
 	switch s.Type {
 	case Surface_DIRT:
-		return " _"
+		return " ="
 	case Surface_GRASS:
 		return " i"
 	case Surface_HOLE:
 		return " *"
 	case Surface_ROCK:
-		return " #"
+		return " _"
 	case Surface_SOIL:
-		return " ="
+		return " #"
+	case Surface_WATER:
+		return " ~"
 	default:
 		return " ?"
 	}
