@@ -36,52 +36,58 @@ func main() {
 	fmt.Printf("%v", v.Render())
 }
 
-func Generate(seed int64) *[64][64]protocol.Surface_Type {
-	rand.Seed(seed)
-	var gradient [64][64]int64
-	step := 32 // partition size
-	iter := int64(2)
-	// Fill the gradient in increasingly smaller grains.
-	for step > 1 {
-		delta := math.MaxInt64 / iter
-		for x := 0; x < 64; x += step {
-			for y := 0; y < 64; y += step {
-				// Randomly choose up or down.
-				polarity := rand.Intn(2)
-				if polarity == 0 {
-					delta = -delta
-				}
-				for i := x; i < x+step-1; i++ {
-					for j := y; j < y+step-1; j++ {
-						// Apply the delta amortized by
-						// proximity to partition center.
-						relativeDelta := int64(float64(delta) * (float64(i-step/2) / float64(step)))
-						gradient[i][j] += relativeDelta
-					}
-				}
-			}
-		}
-		// As the partitions become smaller,
-		// so do the vertical deltas.
-		step = step / 2
-		iter = iter * 2
+func Generate(xMin, yMin, xMax, yMax int32) *[64][64]protocol.Surface_Type {
+
+	var gradient [64][64]float64
+	var r *rand.Rand
+
+	// Fill the corners with initial values.
+	for _, c := range [][2]int32{
+		{xMax, yMax}, // upper right
+		{xMin, yMax}, // upper left
+		{xMax, yMin}, // lower right
+		{xMin, yMin}, // lower left
+	} {
+		x := int64(c[0])
+		y := int64(c[1])
+
+		// Seed with coordinates to get a deterministic height.
+		seed := x<<32 + y
+		r = rand.New(rand.NewSource(seed))
+		height := r.Float64()
+		gradient[int(x)][int(y)] = height
 	}
-	// Map integer gradients to surface types.
-	var surface [64][64]protocol.Surface_Type
-	for x := 0; x < 64; x++ {
-		for y := 0; y < 64; y++ {
-			i := gradient[x][y]
-			switch {
-			case i < math.MaxInt64/-2:
-				surface[x][y] = protocol.Surface_WATER
-			case i < 0:
-				surface[x][y] = protocol.Surface_GRASS
-			case i < math.MaxInt64/2:
-				surface[x][y] = protocol.Surface_DIRT
-			default:
-				surface[x][y] = protocol.Surface_ROCK
+
+	// Run the diamond-square algorithm to fill in the rest of the points.
+	// See https://en.wikipedia.org/wiki/Diamond-square_algorithm.
+	fill := func(x1, y1, x2, y2 int32, depth int) {
+
+		// Diamond step.
+		avg := (gradient[x1][y1] + gradient[x1][y2] +
+			gradient[x2][y] + gradient[x2][y2]) / 4.0
+		// Random delta, getting exponentially smaller.
+		delta := (r.Float64() - 0.5) * (1.0 / math.Exp2(float64(depth)))
+		centerX := (x1 + x2) / 2
+		centerY := (y1 + y2) / 2
+		gradient[centerX][centerY] = avg + delta
+
+		// Square step.
+		wrapping := func(x, y int32) float64 {
+			// TODO: wrap proportially with depth
+			if x < xMin {
+				x = xMax
 			}
+			if x > xMax {
+				x = xMin
+			}
+			if y < yMin {
+				y = yMax
+			}
+			if y > yMax {
+				y = yMin
+			}
+			return gradient[x][y]
 		}
+		// TODO: Diamond step.
 	}
-	return &surface
 }
